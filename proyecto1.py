@@ -16,7 +16,7 @@ def calculaCosto(x: np.ndarray, y: np.ndarray, theta=[0, 0]):
     return np.sum(np.square((theta[0] + theta[1] * x[:, 1]) - y))
 
 
-def gradienteDescendiente(x: np.ndarray, y: np.ndarray, theta=[0, 0], alpha=10, depth=1000):
+def gradienteDescendiente(x: np.ndarray, y: np.ndarray, theta=[0, 0], alpha=10, depth=1500):
     # calcula error inicial (para no empeorar)
     error_p = calculaCosto(x, y, theta)
 
@@ -34,8 +34,8 @@ def gradienteDescendiente(x: np.ndarray, y: np.ndarray, theta=[0, 0], alpha=10, 
             theta = [t0, t1]
             error_p = error
         # aplicar theta reducido integilentemente
-        alpha *= 0.95
-        alpha = max(0.001, alpha)
+        alpha *= 0.4
+        alpha = max(0.02, alpha)
 
     # al terminar regresar el resultado
     return theta
@@ -56,4 +56,5 @@ if __name__ == '__main__':
     graficaDatos(X[:, 1], Y, theta)
 
     # comprobar
-    print(theta)
+    print(f'prediction 1: {np.array([1, 3.5]).dot(theta)} (should be close to: 0.4519)')
+    print(f'prediction 2: {np.array([1,7]).dot(theta)} (should be close to: 4.5342)')
