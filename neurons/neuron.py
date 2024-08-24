@@ -37,7 +37,7 @@ class Neuron:
             return
 
         for i in range(len(self.weights) - 1):
-            self.errors[i] = (expected-value) * startingValues[i]
+            self.errors[i] = (expected-value) * (startingValues[i])
             # self.errors[i] = startingValues[i] if self.isStart else self.connections[i].heated\
             #     * (1 - (startingValues[i] if self.isStart else self.connections[i].heated)) * otherError * self.weights[i]
             self._weights[i] = self.weights[i] + alfa * self.errors[i]
