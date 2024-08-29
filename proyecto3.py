@@ -1,6 +1,8 @@
 from neurons import neuron
 import numpy as np
-import struct, os, requests
+import struct
+import os
+import requests
 
 
 def download_mnist():
@@ -20,6 +22,7 @@ def download_mnist():
             response = requests.get(base_url + filename)
             with open(filename, 'wb') as f:
                 f.write(response.content)
+
 
 def load_images(filename):
     with open(filename, 'rb') as f:
@@ -56,4 +59,15 @@ if __name__ == '__main__':
     print(f'Test images shape: {test_images.shape}')
     print(f'Test labels shape: {test_labels.shape}')
 
-    model = neuron.Neuron([])
+    model = neuron.Neuron.createModel([400, 400, 25, 10], 400)
+
+    neuron.Neuron.trainModel(model, 0.01, 1000, train_images, train_labels)
+
+    correct = 0
+    for i in range(len(test_images)):
+        prediction = neuron.Neuron.predict(model, test_images[i])
+
+        if abs(sum(prediction - test_labels)) < 0.1:
+            correct += 1
+
+    print(f'model prediction rate: {correct/len(test_images)}')
