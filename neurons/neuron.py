@@ -100,7 +100,7 @@ class Neuron:
                         # if j < len(model) - 1:
                         #     model[j][i].calculateHiddenLayerErrors()
                         expected = expectedValues[set][i] if j == len(
-                            model) - 1 else sigmoid(sum([model[j + 1][m].errors[i] for m in range(len(model[j+1]))]))
+                            model) - 1 else sum([model[j + 1][m].errors[i] for m in range(len(model[j+1]))]) # todo multyply by weight
                         model[j][i].adjustWeights(
                             learningRate=alfa,
                             expected=expected,
