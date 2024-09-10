@@ -36,8 +36,7 @@ def on_release(key):
 
 persona = input('Quien eres?\n>>> ')
 
-print(f'Va, gracias {
-      persona}. Antes que nada, vamos a pedirte que escribas hola un total de 50 veces. Plis hazlo. La prueba inicia en 5 segundos...')
+print(f'Va, gracias {persona}. Antes que nada, vamos a pedirte que escribas hola un total de 50 veces. Plis hazlo. La prueba inicia en 5 segundos...')
 
 time.sleep(5)
 
