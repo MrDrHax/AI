@@ -69,13 +69,13 @@ def plot(array, ax: plt.axes):
 size = len(trainingData[0])  # int(np.sqrt(len(trainingData[0])))
 weights = np.zeros((size, size))
 
-for entry in trainingData:
-    ledata = entry.reshape(-1, 1)
-    weights += np.dot(ledata, ledata.T)/len(ledata)
-
-# for entry in [trainingData[0], trainingData[1]]:
+# for entry in trainingData:
 #     ledata = entry.reshape(-1, 1)
 #     weights += np.dot(ledata, ledata.T)/len(ledata)
+
+for entry in [trainingData[0], trainingData[1]]:
+    ledata = entry.reshape(-1, 1)
+    weights += np.dot(ledata, ledata.T)/len(ledata)
 
 
 np.fill_diagonal(weights, 0)
@@ -92,12 +92,12 @@ def find(weights: np.ndarray, data: np.ndarray, iterations: int = 10):
 fig, axs = plt.subplots(3, 10, figsize=(10, 10))
 
 for i in range(10):
-    toAnalize = process(array_list[i][0])
+    toAnalize = process(array_list[1][i])
     result = find(weights=weights, data=toAnalize)
     plot(toAnalize, axs[0, i])
     plot(result, axs[1, i])
 
-    plot(trainingData[i], axs[2, i])
+    plot(trainingData[1], axs[2, i])
 
 fig.text(0.5, 0.85, 'Prueba', ha='center', va='center', fontsize=14)
 fig.text(0.5, 0.60, 'Reconocido', ha='center', va='center', fontsize=14)

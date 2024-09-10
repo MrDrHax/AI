@@ -2,7 +2,8 @@ import time
 from pynput import keyboard
 import pandas as pd
 
-listOfObjects = pd.DataFrame(columns=['h<', 'h>', 'o<', 'o>','l<','l>','a<','a>'])
+listOfObjects = pd.DataFrame(columns=['c<', 'c>', 'o<', 'o>', 'r<', 'r>', 'r<', 'r>', 'e<',
+                             'e>', 'c<', 'c>', 't<', 't>', 'h<', 'h>', 'o<', 'o>', 'r<', 'r>', 's<', 's>', 'e<', 'e>',])
 
 # Array to store the log of key presses
 keystroke_log = []
@@ -32,9 +33,11 @@ def on_release(key):
     if key == keyboard.Key.enter:
         return False
 
+
 persona = input('Quien eres?\n>>> ')
 
-print(f'Va, gracias {persona}. Antes que nada, vamos a pedirte que escribas hola un total de 50 veces. Plis hazlo. La prueba inicia en 5 segundos...')
+print(f'Va, gracias {
+      persona}. Antes que nada, vamos a pedirte que escribas hola un total de 50 veces. Plis hazlo. La prueba inicia en 5 segundos...')
 
 time.sleep(5)
 
@@ -44,7 +47,7 @@ while i < 50:
     print(f'Paso {i}: ')
 
     keystroke_log = []
-    
+
     # Start listening to keyboard events
     with keyboard.Listener(on_press=on_press, on_release=on_release) as listener:
         listener.join()
@@ -55,8 +58,8 @@ while i < 50:
 
     written = ''.join([str(j[0]) for j in keystroke_log]).replace("'", '')
 
-    if written != 'hola':
-        print('Escribe hola plis')
+    if written != 'correcthorse':
+        print('Escribe correcthorse plis')
         continue
 
     toSave = [j for k in keystroke_log for j in k[1:]]
