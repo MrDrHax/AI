@@ -2,7 +2,7 @@
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.decomposition import PCA
-from sklearn.metrics import confusion_matrix, accuracy_score
+from sklearn.metrics import confusion_matrix, accuracy_score, f1_score, precision_score, recall_score
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -19,55 +19,64 @@ y = datos['usuario'].to_numpy(dtype=str)     # Etiquetas: última columna
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=42)
 
-# Inicializar el modelo KNN con K-vecinos
-knn = KNeighborsClassifier(n_neighbors=3)
+for k in range(1, 16, 1):
+    # Inicializar el modelo KNN con K-vecinos
+    knn = KNeighborsClassifier(n_neighbors=k)
 
-# Entrenar el modelo con el conjunto de entrenamiento
-knn.fit(X_train, y_train)
+    # Entrenar el modelo con el conjunto de entrenamiento
+    knn.fit(X_train, y_train)
 
-# ver si sirve
+    # ver si sirve
 
-y_predicted = knn.predict(X_test)
+    y_predicted = knn.predict(X_test)
 
+    # Create a confusion matrix
+    cm = confusion_matrix(y_test, y_predicted)
 
-# Create a confusion matrix
-cm = confusion_matrix(y_test, y_predicted)
+    # Normalize the confusion matrix
+    cm_normalized = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
 
-# Normalize the confusion matrix
-cm_normalized = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
+    # Set up the matplotlib figure
+    fig, ax = plt.subplots(figsize=(8, 6))
 
-# Set up the matplotlib figure
-fig, ax = plt.subplots(figsize=(8, 6))
+    # Create a heatmap of the confusion matrix
+    heatmap = ax.imshow(cm_normalized, cmap='Blues')
 
-# Create a heatmap of the confusion matrix
-heatmap = ax.imshow(cm_normalized, cmap='Blues')
+    # Add colorbars
+    fig.colorbar(heatmap)
 
-# Add colorbars
-fig.colorbar(heatmap)
+    # Add labels
+    ax.set_xlabel('Predicted label')
+    ax.set_ylabel('True label')
+    ax.set_title('Confusion matrix')
 
-# Add labels
-ax.set_xlabel('Predicted label')
-ax.set_ylabel('True label')
-ax.set_title('Confusion matrix')
+    # Add the values to the heatmap
+    for i in range(cm.shape[0]):
+        for j in range(cm.shape[1]):
+            ax.text(j, i, format(cm[i, j], 'd'), ha='center', va='center')
 
-# Add the values to the heatmap
-for i in range(cm.shape[0]):
-    for j in range(cm.shape[1]):
-        ax.text(j, i, format(cm[i, j], 'd'), ha='center', va='center')
+    # Add ticks
+    ax.xaxis.set_ticks(np.arange(cm.shape[1]))
+    ax.yaxis.set_ticks(np.arange(cm.shape[0]))
 
-# Add ticks
-ax.xaxis.set_ticks(np.arange(cm.shape[1]))
-ax.yaxis.set_ticks(np.arange(cm.shape[0]))
+    # Set tick labels
+    ax.xaxis.set_ticklabels(['alex', 'bolio', 'oswaldo'])
+    ax.yaxis.set_ticklabels(['alex', 'bolio', 'oswaldo'])
 
-# Set tick labels
-ax.xaxis.set_ticklabels(['alex', 'bolio', 'oswaldo'])
-ax.yaxis.set_ticklabels(['alex', 'bolio', 'oswaldo'])
+    # Rotate tick labels
+    plt.xticks(rotation=45)
 
-# Rotate tick labels
-plt.xticks(rotation=45)
+    # Show the plot
+    plt.savefig(f'img/cm_{k}.png')
 
-# Show the plot
-plt.show()
+    print(
+        f'Metrics k = {k}:\n'
+        '- accuracy:', accuracy_score(y_test, y_predicted),
+        '- precision:', precision_score(y_test,
+                                        y_predicted, average='macro'),
+        '- recall:', recall_score(y_test, y_predicted, average='macro'),
+        '- f1:', f1_score(y_test, y_predicted, average='macro'),
+    )
 
 
 # encontre esto oswi. No se si te ayude a hacer lo que querias ver....
