@@ -1,24 +1,19 @@
 import pandas as pd
-import matplotlib.pyplot as plt 
-from sklearn.preprocessing import StandardScaler
+import matplotlib.pyplot as plt
 import hashlib
 
 # Cargar los datos de los tres integrantes
-csv_files = ['alex_password.csv', 'Oswaldo_password.csv',
-             'bolio_password.csv']  # Nombres de los archivos CSV
+csv_files = ['alex_password.csv', 'Oswaldo_password.csv', 'bolio_password.csv']  # Nombres de los archivos CSV
 usuarios = ['alex', 'oswaldo', 'bolio']  # Etiquetas de los usuarios
 
-
-def string_to_color(s, offset = 0):
+def string_to_color(s, offset=0):
     # Hash the string to get a 6-digit hexadecimal number
     h = hashlib.sha256(s.encode()).hexdigest()[:6]
-
     # Convert the hexadecimal number to a color code
     r = int(h[:2], 16)
     g = int(h[2:4], 16)
     b = int(h[4:], 16)
-    color = '#{:02x}{:02x}{:02x}'.format(max(r - offset, 0), max(g - offset, 0 ), max(b - offset, 0))
-
+    color = '#{:02x}{:02x}{:02x}'.format(max(r - offset, 0), max(g - offset, 0), max(b - offset, 0))
     return color
 
 x = []
@@ -47,17 +42,19 @@ for file, user in zip(csv_files, usuarios):
     colors.append(string_to_color(user, 100))
     colors.append(string_to_color(user, 100))
 
-
-
-# Create a new figure
+# Crear una nueva figura
 fig, ax = plt.subplots()
 
-# Plot each line using the data parameter
+# Graficar cada línea utilizando las listas de datos
 for i in range(len(x)):
-    ax.plot(x[i], data=ax, label=tag[i], color=colors[i])
+    ax.plot(x[i], label=tag[i], color=colors[i])
 
-# Add a legend
+# Añadir etiquetas de los ejes
+ax.set_xlabel('Index (CSV columns)')
+ax.set_ylabel('Values (Mean, std)')
+
+# Añadir leyenda
 ax.legend()
 
-# Show the plot
+# Mostrar el gráfico
 plt.show()
