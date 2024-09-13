@@ -1,4 +1,4 @@
-from sklearn.metrics import precision_recall_curve, auc
+from sklearn.metrics import roc_curve, roc_auc_score
 import matplotlib.pyplot as plt
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import train_test_split
@@ -26,15 +26,14 @@ y_probs = knn.predict_proba(X_test)
 
 # Lista para almacenar los resultados
 classes = knn.classes_
-precision_recall_results = []
 
 # Colores personalizados para cada clase
 colors = ['#1f77b4', '#ff7f0e', '#2ca02c']  # Colores distintos para cada clase
 
-# Generar la curva de precisión-recall para cada clase
+# Generar la curva de ROC para cada clase
 plt.figure(figsize=(10, 8))
 
-# Generar la curva de precisión-recall para cada clase
+# Generar la curva de ROC para cada clase
 for i, (class_name, color) in enumerate(zip(classes, colors)):
     # Convertir etiquetas a valores binarios: 1 si es la clase de interés, 0 si no
     y_binary = (y_test == class_name).astype(int)
@@ -42,26 +41,17 @@ for i, (class_name, color) in enumerate(zip(classes, colors)):
     # Obtener las probabilidades para la clase de interés
     probs_class = y_probs[:, i]
     
-    # Calcular precisión, recall y el umbral correspondiente
-    precision, recall, _ = precision_recall_curve(y_binary, probs_class)
-    
-    # Calcular el área bajo la curva (AUC)
-    pr_auc = auc(recall, precision)
-    
-    # Guardar los resultados para comparar
-    precision_recall_results.append((precision, recall, pr_auc, class_name))
-    
-    # Graficar la curva de precisión-recall para esta clase
-    plt.plot(recall, precision, label=f'{class_name} (AUC = {pr_auc:.2f})',
-             color=color, linewidth=2, linestyle='-', alpha=0.8)
+    # Calcular la tasa de falsos positivos y verdaderos positivos
+    fpr, tpr, _ = roc_curve(y_binary, probs_class)
+    plt.plot(fpr, tpr, label=f"{class_name} (AUC = {roc_auc_score(y_binary, probs_class):0.2f})")
 
 # Añadir línea horizontal en y=0.5 para resaltar el umbral
 plt.axhline(y=0.5, color='gray', linestyle='--', linewidth=1, alpha=0.7)
 
 # Configuración del gráfico
-plt.xlabel('Recall', fontsize=14)
-plt.ylabel('Precision', fontsize=14)
-plt.title('Precision-Recall Curves for Each User', fontsize=16)
+plt.xlabel('False Positive Rate', fontsize=14)
+plt.ylabel('True Positive Rate', fontsize=14)
+plt.title('ROC AUC Curves for Each User', fontsize=16)
 plt.legend(loc='best', fontsize=12, frameon=True, shadow=True, facecolor='white', edgecolor='gray')
 plt.grid(True, linestyle='--', linewidth=0.5, alpha=0.7)
 plt.tight_layout()
